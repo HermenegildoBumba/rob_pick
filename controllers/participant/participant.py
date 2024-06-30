@@ -165,8 +165,18 @@ armMotors[3].setPosition(0)
 armMotors[2].setPosition(-0.3)
 robot.step(200 * timestep)
 
-armMotors[1].setPosition(-1.0)
-robot.step(200 * timestep)
+ # Control in closed loop using the position sensor of the arm motor
+delta_angle = 0.01  # Acceptable range for considering the motion completed
+target_position = -1.0  # Target position for armMotors[3]
+
+armMotors[3].setPosition(target_position)
+
+while robot.step(timestep) != -1:
+    current_position = armPositionSensors[3].getValue()
+    if abs(current_position - target_position) < delta_angle:
+        # Motion completed
+        break
+
 
 armMotors[3].setPosition(-1.0)
 robot.step(200 * timestep)
